@@ -1,0 +1,31 @@
+{
+  "name": "persistenceapi",
+  "version": "1.0.0",
+  "description": "Save and serve user data",
+  "main": "index.js",
+  "directories": {
+    "example": "examples",
+    "lib": "lib",
+    "test": "test"
+  },
+  "dependencies": {
+    "chai": "^4.1.2",
+    "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MoYapro/persistenceApi.git"
+  },
+  "author": "Tom Ritmeier",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MoYapro/persistenceApi/issues"
+  },
+  "homepage": "https://github.com/MoYapro/persistenceApi#readme"
+}
