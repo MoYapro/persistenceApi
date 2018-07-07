@@ -58,6 +58,7 @@ app.get('/', (req, res) => {
     },
 
   };
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.json(state);
 });
 
