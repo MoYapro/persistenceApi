@@ -2,8 +2,23 @@
 
 const path = require('path');
 const express = require('express');
-
+const Datastore = require('@google-cloud/datastore');
 const app = express();
+
+let config = {
+  "GCLOUD_PROJECT": "MoneyApp",
+  "DATA_BACKEND": "datastore"
+};
+
+
+// Your Google Cloud Platform project ID
+const projectId = 'YOUR_PROJECT_ID';
+
+// Creates a client
+const datastore = new Datastore({
+  projectId: config.GCLOUD_PROJECT,
+});
+
 
 app.disable('etag');
 app.set('views', path.join(__dirname, 'views'));

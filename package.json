@@ -10,10 +10,17 @@
   },
   "dependencies": {
     "chai": "^4.1.2",
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "@google-cloud/datastore": "^1.4.0",
+    "sinon": "4.1.2",
+    "yargs": "10.0.3"
   },
   "devDependencies": {
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "@google-cloud/nodejs-repo-tools": "2.2.3",
+    "ava": "^0.23.0",
+    "nyc": "^11.3.0",
+    "proxyquire": "1.8.0"
   },
   "scripts": {
     "start": "node index.js"
