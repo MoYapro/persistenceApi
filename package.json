@@ -9,9 +9,10 @@
     "test": "test"
   },
   "dependencies": {
+    "@google-cloud/datastore": "^1.4.0",
     "chai": "^4.1.2",
     "express": "^4.16.3",
-    "@google-cloud/datastore": "^1.4.0",
+    "node-persist": "^3.0.1",
     "sinon": "4.1.2",
     "yargs": "10.0.3"
   },

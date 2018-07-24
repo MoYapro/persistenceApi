@@ -2,8 +2,15 @@
 
 const path = require('path');
 const express = require('express');
-const Datastore = require('@google-cloud/datastore');
 const app = express();
+const storage = require('node-persist');
+
+const DEFAULT_USER = 'default_user';
+
+storage.init({})
+.then(storageInfo => console.log('done init', storageInfo))
+.catch(error => console.log('error while doing init:', error));
+
 var staticUserData = {
   stashes: [{
     id: 1,
@@ -50,40 +57,16 @@ var staticUserData = {
 
 }
 
-let config = {
-  "GCLOUD_PROJECT": "MoneyApp",
-  "DATA_BACKEND": "datastore"
-};
-
-// Your Google Cloud Platform project ID
-const projectId = 'YOUR_PROJECT_ID';
-
-// Creates a client
-const datastore = new Datastore({
-  projectId: config.GCLOUD_PROJECT,
-});
-
 app.get('/saveData', (req, res) => {
-
-  const datakey = datastore.key(['userdata', '1001']);//.then((one, two, three, four) => console.log(one, two, three, four));
-console.log('datakey', datakey);
-const dto = {
-  key: datakey,
-  data: staticUserData
-}
-datastore.save(dto)
-.then(() => {
-  console.log(`Saved ${task.key.name}: ${task.data.description}`);
-})
-.catch(err => {
-  console.error('ERROR:', err);
-});
+console.log('saveData start');
 
 
+storage.setItem(DEFAULT_USER, staticUserData)
+  .then(saveInfo => console.log('done save', saveInfo))
+  .catch(error => console.log('error while saving data :', error));
 res.setHeader('Access-Control-Allow-Origin', '*');
-res.json({message: 'done'});
+res.json({executionResult : 'OK'});
 });
-
 
 
 app.disable('etag');
@@ -93,8 +76,13 @@ app.set('trust proxy', true);
 
 // Redirect root to /books
 app.get('/', (req, res) => {
-res.setHeader('Access-Control-Allow-Origin', '*');
-res.json(staticUserData);
+
+  let loadPromise = storage.getItem(DEFAULT_USER);
+
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  Promise.all([loadPromise])
+    .then(data => res.json(data))
+  .catch(error => console.log('could not load all data'));
 })
 ;
 
