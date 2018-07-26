@@ -4,14 +4,26 @@ const path = require('path');
 const express = require('express');
 const app = express();
 const storage = require('node-persist');
+const bodyParser = require('body-parser');
 
-const DEFAULT_USER = 'default_user';
+app.disable('etag');
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+app.set('trust proxy', true);
 
 storage.init({})
 .then(storageInfo => console.log('done init', storageInfo))
 .catch(error => console.log('error while doing init:', error));
 
-var staticUserData = {
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
+app.use(bodyParser());
+
+const staticUserData = {
   stashes: [{
     id: 1,
     name: 'Stash1',
@@ -53,35 +65,32 @@ var staticUserData = {
   selectedStash: undefined,
   settings: {
     repeatedColapsed: true
-  },
+  }
+};
 
-}
-
-app.get('/saveData', (req, res) => {
+app.post('/saveData/:user', (req, res) => {
+  let toSave = req.body;
 console.log('saveData start');
+console.log('toSave', toSave);
+  if(!toSave) {
+    res.json({executionResult: 'No data to save'});
+    return;
+  }
 
-
-storage.setItem(DEFAULT_USER, staticUserData)
+storage.setItem(req.params.user, req.body)
   .then(saveInfo => console.log('done save', saveInfo))
   .catch(error => console.log('error while saving data :', error));
-res.setHeader('Access-Control-Allow-Origin', '*');
 res.json({executionResult : 'OK'});
 });
 
-
-app.disable('etag');
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-app.set('trust proxy', true);
 
 app.get('/loadUser/:user', (req, res) => {
 console.log('load data for ', req.params.user);
   let loadPromise = storage.getItem(req.params.user);
 
-  res.setHeader('Access-Control-Allow-Origin', '*');
   Promise.all([loadPromise])
-    .then(data => res.json(data))
-  .catch(error => console.log('could not load all data'));
+    .then(data => {console.log('sending data', data); res.json(data)})
+  .catch(error => console.log('could not load all data', error));
 })
 ;
 
