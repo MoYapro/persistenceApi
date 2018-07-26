@@ -74,10 +74,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.set('trust proxy', true);
 
-// Redirect root to /books
-app.get('/', (req, res) => {
-
-  let loadPromise = storage.getItem(DEFAULT_USER);
+app.get('/loadUser/:user', (req, res) => {
+console.log('load data for ', req.params.user);
+  let loadPromise = storage.getItem(req.params.user);
 
   res.setHeader('Access-Control-Allow-Origin', '*');
   Promise.all([loadPromise])
@@ -87,7 +86,6 @@ app.get('/', (req, res) => {
 ;
 
 if (module === require.main) {
-  // Start the server
   const server = app.listen(8080, () => {
     const port = server.address().port;
   console.log(`App listening on port ${port}`);
