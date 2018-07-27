@@ -72,3 +72,6 @@ typings/
 # Serverless directories
 .serverless
 .idea
+
+#ignore DB files
+.node-persist/
